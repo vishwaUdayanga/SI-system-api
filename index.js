@@ -80,7 +80,7 @@ app.post('/api/sign-in-student', async (req, res) => {
                     email: student.email,
                     name: student.name
                 },
-                'secret123'
+                process.env.SECRET
             )
             return res.json({ status: 'ok', student: generatedTokenAdmin })
         } else {
