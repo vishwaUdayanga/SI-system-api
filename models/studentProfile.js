@@ -8,8 +8,8 @@ const Student = new mongoose.Schema(
         birthday: { type: Date, required: true },
         phoneNumber: { type: Number, required: true },
         password: { type: String, required: true },
-        // profilePicture: { type: String },
-        // verified: { type: Boolean, default: false }
+        profilePicture: { type: String },
+        verified: { type: Boolean, default: false }
     },
     { collection: 'student_profile' }
 )
