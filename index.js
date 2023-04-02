@@ -112,3 +112,32 @@ app.get('/api/student/:id/verify/:token', async (req, res) => {
         res.status(500).send({message: "Internal service error"})
     }
 })
+
+app.get('/api/student/get-verified', async (req, res) => {
+    const token = req.headers['x-access-token']
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET)
+        const email = decoded.email
+        const student = await StudentProfile.findOne({ email: email })
+        return res.json({ status: 'ok', email: student.email, profilePicture: student.profilePicture, name: student.name })
+    } catch (error) {
+        console.log(error)
+        res.json({ status: 'error', error: 'Invalid token' })
+    }
+})
+
+app.post('/api/student/upload-profile-pic' , async (req, res) => {
+    const token = req.headers['x-access-token']
+    const payload = req.body.payload
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET)
+        const updatePicStudent = await StudentProfile.updateOne(
+            { email: decoded.email },
+            { $set : { profilePicture : payload }}
+        )
+        res.json({ status: 'ok', updated: 'student' }) 
+    } catch (error) {
+        console.log(error.message)
+        res.json({ error: error })
+    }
+})
