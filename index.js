@@ -141,3 +141,30 @@ app.post('/api/student/upload-profile-pic' , async (req, res) => {
         res.json({ error: error })
     }
 })
+
+app.get('/api/student/get-birthday-list', async (req, res) => {
+    const today = new Date()
+
+    try {
+        const birthdayList = await StudentProfile.aggregate([
+            {
+              "$match": {
+                $expr: {
+                  "$eq": [{ "$month": "$birthday" }, today.getMonth()+1 ]
+                }
+              }
+            },
+            {
+                "$match": {
+                  $expr: {
+                    "$eq": [{ "$dayOfMonth": "$birthday" }, today.getDate() ]
+                  }
+                }
+              }
+        ])
+        res.json({status: 'ok', birthdayList: birthdayList}) 
+    } catch (error) {
+        console.log(error.message)
+        res.json({ error: error })
+    }
+})
