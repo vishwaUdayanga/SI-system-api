@@ -9,6 +9,9 @@ const crypto = require('crypto')
 const Token = require('./models/token')
 const sendEmail = require('./utils/sendEmail')
 const StudentProfile = require('./models/studentProfile')
+const sentAnnouncement = require('./models/sentAnnouncement')
+const SentAnnouncementsWhatsapp = require('./models/sentAnnouncementWhatsapp')
+const sendAnnouncement = require("./utils/sendAnnouncement")
 app.use(cors())
 app.use(express.json({limit: '2mb'}));
 // app.use(express.urlencoded({limit: '2mb'}))
@@ -75,14 +78,26 @@ app.post('/api/sign-in-student', async (req, res) => {
             student.password
         )
         if (IsPasswordValid) {
-            const generatedTokenAdmin = jwt.sign(
-                {
-                    email: student.email,
-                    name: student.name
-                },
-                process.env.SECRET
-            )
-            return res.json({ status: 'ok', student: generatedTokenAdmin })
+            if (student.email === process.env.ADMIN_1) {
+                const generatedTokenAdmin = jwt.sign(
+                    {
+                        email: student.email,
+                        name: student.name,
+                        user: "Admin"
+                    },
+                    process.env.SECRET
+                )
+                return res.json({ status: 'ok', student: generatedTokenAdmin })
+            } else {
+                const generatedTokenAdmin = jwt.sign(
+                    {
+                        email: student.email,
+                        name: student.name
+                    },
+                    process.env.SECRET
+                )
+                return res.json({ status: 'ok', student: generatedTokenAdmin })
+            }
         } else {
             return res.json({ status: 'error', student: 'not' })
         }
@@ -118,8 +133,13 @@ app.get('/api/student/get-verified', async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.SECRET)
         const email = decoded.email
+        const user = decoded.user
         const student = await StudentProfile.findOne({ email: email })
-        return res.json({ status: 'ok', email: student.email, profilePicture: student.profilePicture, name: student.name })
+        if (user === "Admin") {
+            return res.json({ status: 'ok', email: student.email, profilePicture: student.profilePicture, name: student.name, user: "Admin" })
+        } else {
+            return res.json({ status: 'ok', email: student.email, profilePicture: student.profilePicture, name: student.name, user: "Student" })
+        }
     } catch (error) {
         console.log(error)
         res.json({ status: 'error', error: 'Invalid token' })
@@ -167,4 +187,36 @@ app.get('/api/student/get-birthday-list', async (req, res) => {
         console.log(error.message)
         res.json({ error: error })
     }
+})
+
+app.post('/api/send-announcement' , async (req, res) => {
+    const announcementId = req.headers['announcement-id']
+    try {
+        const emails = await StudentProfile.find()
+        const emailArray = []
+        emails.map(record => 
+            emailArray.push(record.email)
+        )
+        await sentAnnouncement.create({
+            announcementId: announcementId,
+        })
+        await sendAnnouncement(emailArray, "New Announcement | SI-System", req.body.paragraph)
+        res.json({status: 'ok', message: 'Announcement sent.'}) 
+    } catch (error) {
+        console.log(error.message)
+        res.json({status: 'error', message: 'error'}) 
+    } 
+})
+
+app.post('/api/send-announcement-whatsapp' , async (req, res) => {
+    const announcementId = req.headers['announcement-id']
+    try {
+        await SentAnnouncementsWhatsapp.create({
+            announcementId: announcementId,
+        })
+        res.json({status: 'ok', message: 'Announcement sent.'}) 
+    } catch (error) {
+        console.log(error.message)
+        res.json({status: 'error', message: 'error'}) 
+    } 
 })
