@@ -136,9 +136,9 @@ app.get('/api/student/get-verified', async (req, res) => {
         const user = decoded.user
         const student = await StudentProfile.findOne({ email: email })
         if (user === "Admin") {
-            return res.json({ status: 'ok', email: student.email, profilePicture: student.profilePicture, name: student.name, user: "Admin" })
+            return res.json({ status: 'ok', email: student.email, profilePicture: student.profilePicture, name: student.name, user: "Admin", phoneNumber: student.phoneNumber, birthday: student.birthday, SAnumber: student.SAnumber })
         } else {
-            return res.json({ status: 'ok', email: student.email, profilePicture: student.profilePicture, name: student.name, user: "Student" })
+            return res.json({ status: 'ok', email: student.email, profilePicture: student.profilePicture, name: student.name, user: "Student", phoneNumber: student.phoneNumber, birthday: student.birthday, SAnumber: student.SAnumber })
         }
     } catch (error) {
         console.log(error)
@@ -219,4 +219,22 @@ app.post('/api/send-announcement-whatsapp' , async (req, res) => {
         console.log(error.message)
         res.json({status: 'error', message: 'error'}) 
     } 
+})
+
+app.post('/api/update-student' , async (req, res) => {
+    try {
+        const updateStudent = await StudentProfile.updateOne(
+            { email: req.body.email },
+            { $set : {
+                SAnumber: req.body.SAnumber,
+                name: req.body.name,
+                birthday: req.body.birthday,
+                phoneNumber: req.body.phoneNumber
+            }}
+        )
+        res.json({ status: 'ok', updated: 'done' }) 
+    } catch (error) {
+        res.json({ status: 'not' })
+        console.log(error.message)
+    }
 })
