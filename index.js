@@ -238,3 +238,9 @@ app.post('/api/update-student' , async (req, res) => {
         console.log(error.message)
     }
 })
+
+const genres = ["Anime", "Emotional", "Hardcore", "Experimental Rock", "Folk Punk", "Gothic Rock", "Grunge", "Hardcore Punk", "Hard Rock", "Indie Rock", "Novelty", "Parody Music", "Stand-up Comedy", "Vaudeville", "Lo-fi"];
+
+app.get('api/genres', (req, res) => {
+    res.status(200).send(genres);
+})
