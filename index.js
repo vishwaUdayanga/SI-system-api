@@ -243,10 +243,7 @@ const genres = ["Anime", "Emotional", "Hardcore", "Experimental Rock", "Folk Pun
 
 app.get('/api/genres', async (req, res) => {
     try {
-            return res.json(genres)
-        } else {
-            return res.json({})
-        }
+        return res.json(genres)
     } catch (error) {
         console.log(error)
     }
