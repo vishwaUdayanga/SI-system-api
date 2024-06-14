@@ -239,7 +239,30 @@ app.post('/api/update-student' , async (req, res) => {
     }
 })
 
-const genres = ["Anime", "Emotional", "Hardcore", "Experimental Rock", "Folk Punk", "Gothic Rock", "Grunge", "Hardcore Punk", "Hard Rock", "Indie Rock", "Novelty", "Parody Music", "Stand-up Comedy", "Vaudeville", "Lo-fi"];
+const genres = {
+    "genres": [
+        {
+            "id": 0,
+            "genre": ""
+        },
+        {
+            "id": 1,
+            "genre": ""
+        },
+        {
+            "id": 2,
+            "genre": ""
+        },
+        {
+            "id": 3,
+            "genre": ""
+        },
+        {
+            "id": 4,
+            "genre": ""
+        }
+    ]
+};
 
 app.get('/api/genres', async (req, res) => {
     try {
