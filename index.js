@@ -242,23 +242,36 @@ app.post('/api/update-student' , async (req, res) => {
 const genres = [
         {
             "id": 0,
-            "genre": ""
+            "genre": "Hip-hop"
         },
         {
             "id": 1,
-            "genre": ""
+            "genre": "Pop"
         },
         {
             "id": 2,
-            "genre": ""
+            "genre": "Alternative"
         },
         {
             "id": 3,
-            "genre": ""
+            "genre": "Classical"
         },
         {
             "id": 4,
-            "genre": ""
+            "genre": "Rock"
+        },
+        {
+            "id":5,
+            "genre": "Kpop"
+        
+        },
+        {
+            "id":6,
+            "genre": "RnB"
+        },
+        {
+            "id":7,
+            "genre": "Electronic"
         }
 
 ];
