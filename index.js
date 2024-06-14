@@ -239,8 +239,7 @@ app.post('/api/update-student' , async (req, res) => {
     }
 })
 
-const genres = {
-    "genres": [
+const genres = [
         {
             "id": 0,
             "genre": ""
@@ -261,8 +260,8 @@ const genres = {
             "id": 4,
             "genre": ""
         }
-    ]
-};
+
+];
 
 app.get('/api/genres', async (req, res) => {
     try {
